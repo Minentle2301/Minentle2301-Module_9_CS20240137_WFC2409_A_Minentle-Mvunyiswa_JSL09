@@ -18,26 +18,37 @@ fetch("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&que
     });
 
 
+// Fetch data from the CoinGecko API for Dogecoin
+fetch("https://api.coingecko.com/api/v3/coins/dogecoin")
+    // When the response is received, execute this function
+    .then(res => {
+        // Check if the response is not OK (i.e., status is not in the range 200-299)
+        if (!res.ok) {
+            // If the response status indicates an error, throw an error
+            throw Error("Something went wrong");
+        }
+        // If the response is OK, return the response as JSON
+        return res.json();
+    })
+    // Once the JSON data is available, execute this function
+    .then(data => {
+        // Insert Dogecoin's image and name into the element with id "crypto-top"
+        document.getElementById("crypto-top").innerHTML = `
+            <img src=${data.image.small} />
+            <span>${data.name}</span>
+        `;
+        // Append the current price, 24-hour high, and 24-hour low to the element with id "crypto"
+        document.getElementById("crypto").innerHTML += `
+            <p>🎯: $${data.market_data.current_price.usd}</p>
+            <p>👆: $${data.market_data.high_24h.usd}</p>
+            <p>👇: $${data.market_data.low_24h.usd}</p>
+        `;
+    })
+    // If an error occurs at any point in the process, catch and log the error to the console
+    .catch(err => console.error(err));
 
 
-try {
-    const res = await fetch("https://api.coingecko.com/api/v3/coins/dogecoin")
-    if (!res.ok) {
-        throw Error("Something went wrong")
-    }
-    const data = await res.json()
-    document.getElementById("crypto-top").innerHTML = `
-        <img src=${data.image.small} />
-        <span>${data.name}</span>
-    `
-    document.getElementById("crypto").innerHTML += `
-        <p>🎯: $${data.market_data.current_price.usd}</p>
-        <p>👆: $${data.market_data.high_24h.usd}</p>
-        <p>👇: $${data.market_data.low_24h.usd}</p>
-    `
-} catch (err) {
-    console.error(err)
-}
+
 
 function getCurrentTime() {
     const date = new Date()
