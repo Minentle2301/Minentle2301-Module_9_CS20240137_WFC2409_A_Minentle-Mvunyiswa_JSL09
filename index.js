@@ -1,13 +1,22 @@
-try {
-    const res = await fetch("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature")
-    const data = await res.json()
-    document.body.style.backgroundImage = `url(${data.urls.regular})`
-    document.getElementById("author").textContent = `By: ${data.user.name}`
-} catch (err) {
-    document.body.style.backgroundImage = `url(https://images.unsplash.com/photo-1560008511-11c63416e52d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyMTEwMjl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2MjI4NDIxMTc&ixlib=rb-1.2.1&q=80&w=1080
-)`
-    document.getElementById("author").textContent = `By: Dodi Achmad`
-}
+// Fetch a random photo from Unsplash API
+fetch("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature")
+    // When the response is received, convert it to JSON
+    .then(res => res.json())
+    // Once the JSON data is available, execute this function
+    .then(data => {
+        // Set the background image of the body element using the regular size URL from the fetched data
+        document.body.style.backgroundImage = `url(${data.urls.regular})`;
+        // Update the element with id "author" to display the name of the photo's author
+        document.getElementById("author").textContent = `By: ${data.user.name}`;
+    })
+    // If an error occurs, execute this function
+    .catch(err => {
+        // Set a default background image if the API call fails
+        document.body.style.backgroundImage = `url(https://images.unsplash.com/photo-1560008511-11c63416e52d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyMTEwMjl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2MjI4NDIxMTc&ixlib=rb-1.2.1&q=80&w=1080)`;
+        // Update the author element with a default author's name 
+        document.getElementById("author").textContent = `By: Dodi Achmad`;
+    });
+
 
 
 
