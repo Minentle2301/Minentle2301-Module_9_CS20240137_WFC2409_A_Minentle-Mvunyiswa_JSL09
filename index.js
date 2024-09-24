@@ -58,30 +58,30 @@ function getCurrentTime() {
 setInterval(getCurrentTime, 1000)
 
 navigator.geolocation.getCurrentPosition(async position => {
-    // Fetch weather data from OpenWeatherMap API using latitude and longitude from the user's location
-fetch(`https://apis.scrimba.com/openweathermap/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=imperial`)
-// When the response is received, execute this function
-.then(res => {
-    // Check if the response is not OK (status code outside of 200-299 range)
-    if (!res.ok) {
-        // If the response is not OK, throw an error with a custom message
-        throw Error("Weather data not available");
+    try {
+        // Fetch weather data from OpenWeatherMap API using latitude and longitude from the user's location
+        const res = await fetch(`https://apis.scrimba.com/openweathermap/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=imperial`);
+        
+        // Check if the response is not OK (status code outside of 200-299 range)
+        if (!res.ok) {
+            // If the response is not OK, throw an error with a custom message
+            throw Error("Weather data not available");
+        }
+        
+        // If the response is OK, return the response as JSON
+        const data = await res.json();
+        
+        // Construct the URL for the weather icon based on the icon code from the fetched data
+        const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+        
+        // Update the element with id "weather" to display the weather icon, temperature, and city name
+        document.getElementById("weather").innerHTML = `
+            <img src=${iconUrl} />
+            <p class="weather-temp">${Math.round(data.main.temp)}º</p>
+            <p class="weather-city">${data.name}</p>
+        `;
+    } catch (err) {
+        // If an error occurs, catch and log the error to the console
+        console.error(err);
     }
-    // If the response is OK, return the response as JSON
-    return res.json();
-})
-// Once the JSON data is available, execute this function
-.then(data => {
-    // Construct the URL for the weather icon based on the icon code from the fetched data
-    const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-    
-    // Update the element with id "weather" to display the weather icon, temperature, and city name
-    document.getElementById("weather").innerHTML = `
-        <img src=${iconUrl} />
-        <p class="weather-temp">${Math.round(data.main.temp)}º</p>
-        <p class="weather-city">${data.name}</p>
-    `;
-})
-// If an error occurs at any point, catch and log the error to the console
-.catch(err => console.error(err))
 });
